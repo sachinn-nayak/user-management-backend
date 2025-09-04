@@ -4,6 +4,37 @@ import { authenticate } from '../middleware/auth.js';
 import bcrypt from 'bcrypt';
 
 const router = express.Router();
+
+/**
+ * @openapi
+ * /customers/signup:
+ *   post:
+ *     summary: Register a new customer
+ *     description: Creates a new customer with credentials and hashed password.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CustomerSignupRequest'
+ *     responses:
+ *       201:
+ *         description: Customer created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Customer created successfully
+ *                 customer:
+ *                   $ref: '#/components/schemas/CustomerResponse'
+ *       400:
+ *         description: Missing required fields or username already exists
+ *       500:
+ *         description: Database error
+ */
 router.post('/signup', async (req, res) => {
     const { name, email, phone_number, address, username, password } = req.body;
     if (!name || !email || !phone_number || !address || !username || !password) {

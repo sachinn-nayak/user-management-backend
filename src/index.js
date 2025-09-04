@@ -4,6 +4,7 @@ import db from './db.js';
 import authRoutes from './routes/auth.js';
 import customerRoutes from './routes/customer.js';
 import userRoutes from './routes/user.js';
+import swaggerDocs  from "./swagger.js";
 
 const app = express();
 app.use(express.json());
@@ -16,13 +17,13 @@ app.use('/users', userRoutes);
 
 const start = async () => {
   const port = process.env.PORT || 3005;
-
   while (true) {
     try {
       await db.query('SELECT 1');
       console.log('Connected to Postgres.');
+      swaggerDocs(app, port);
       app.listen(port, () =>
-        console.log(`🚀 Server listening at http://localhost:${port}`)
+        console.log(`Server listening at http://localhost:${port}`)
       );
       break;
     } catch (err) {

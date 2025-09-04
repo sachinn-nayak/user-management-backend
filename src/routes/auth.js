@@ -54,19 +54,35 @@ router.post('/login', async (req, res) => {
 router.post('/refresh', async (req, res) => {
   const { refreshToken } = req.body;
   if (!refreshToken) return res.status(401).json({ error: 'Missing refresh token' });
-
   const payload = verifyRefreshToken(refreshToken);
   if (!payload) return res.status(403).json({ error: 'Invalid refresh token' });
-
   const result = await db.query(
     'SELECT * FROM customer_credentials WHERE customer_id = $1 AND refresh_token = $2',
     [payload.id, refreshToken]
   );
-
   if (result.rows.length === 0) {
     return res.status(403).json({ error: 'Refresh token revoked' });
   }
   const newAccessToken = generateAccessToken({ id: payload.id, role: result.rows[0].role });
   res.json({ accessToken: newAccessToken });
 });
+
+router.post('/logout', async (req, res) => {
+  const { refreshToken } = req.body;
+  if (!refreshToken) return res.status(400).json({ error: 'Missing refresh token' });
+  try {
+    const result = await db.query(
+      'DELETE FROM customer_credentials WHERE refresh_token = $1 RETURNING *',
+      [refreshToken]
+    );  
+    if (result.rows.length === 0) {
+      return res.status(400).json({ error: 'Invalid refresh token' });
+    } 
+    res.json({ message: 'Logged out successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
 export default router;
