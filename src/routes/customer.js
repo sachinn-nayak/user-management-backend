@@ -35,7 +35,7 @@ const router = express.Router();
  *       500:
  *         description: Database error
  */
-router.post('/signup', async (req, res) => {
+router.post('/register', async (req, res) => {
     const { name, email, phone_number, address, username, password } = req.body;
     if (!name || !email || !phone_number || !address || !username || !password) {
         return res.status(400).json({ error: 'All fields are required: name, email, phone_number, address, username, password' });
@@ -65,6 +65,9 @@ router.post('/signup', async (req, res) => {
         res.status(201).json({ message: 'Customer created successfully', customer });
     } catch (err) {
         await db.query('ROLLBACK');
+        if (err.code === '23505') {
+            return res.status(400).json({ error: 'Email already exists' });
+        }
         console.error(err);
         res.status(500).json({ error: 'Database error' });
     }
