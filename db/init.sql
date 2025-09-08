@@ -26,6 +26,27 @@ CREATE TABLE IF NOT EXISTS CUSTOMER_CREDENTIALS (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TYPE product_status AS ENUM ('active', 'inactive', 'out_of_stock');
+
+CREATE TABLE IF NOT EXISTS products (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    price NUMERIC(10, 2) NOT NULL,
+    stock INTEGER NOT NULL,
+    category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL,
+    sku TEXT UNIQUE NOT NULL,
+    status product_status NOT NULL DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS categories (
+    id SERIAL PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 
 

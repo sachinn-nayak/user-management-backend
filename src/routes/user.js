@@ -24,8 +24,6 @@ router.post('/create', async (req, res) => {
 });
 
 
-
-
 router.get('', async (req, res) => {
   try {
     const { rows } = await db.query('SELECT id, name FROM users ORDER BY id');
