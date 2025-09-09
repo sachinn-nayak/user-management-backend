@@ -8,6 +8,7 @@ import swaggerDocs  from "./swagger.js";
 import categoryRoutes from './routes/category.js';
 import productRoutes from './routes/product.js';
 import productImageRoutes from './routes/product_images.js';
+import paymentRoutes from './routes/payments.js';
 import cors from 'cors';
 
 const app = express();
@@ -33,6 +34,7 @@ app.use('/users', userRoutes);
 app.use('/categories',categoryRoutes);
 app.use('/products',productRoutes);
 app.use('/product-images',productImageRoutes);
+app.use('/payments',paymentRoutes);
 
 const start = async () => {
   const port = process.env.PORT || 3005;
