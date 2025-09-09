@@ -26,5 +26,28 @@ router.post('/create',async (req, res) => {
     }
 });
 
+
+router.get('', async (req, res) => {
+    try {
+        const { rows: products } = await db.query(
+            'SELECT id, name, price, stock, category_id, sku, status FROM products ORDER BY id'
+        );
+        
+        const { rows: productImages } = await db.query(
+            'SELECT id, product_id, image_url FROM product_images'
+        );
+
+        products.forEach(product => {
+            product.images = productImages.filter(img => img.product_id === product.id);
+        });
+
+        res.json(products);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+
 export default router;
 

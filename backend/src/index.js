@@ -7,6 +7,7 @@ import userRoutes from './routes/user.js';
 import swaggerDocs  from "./swagger.js";
 import categoryRoutes from './routes/category.js';
 import productRoutes from './routes/product.js';
+import productImageRoutes from './routes/product_images.js';
 
 const app = express();
 app.use(express.json());
@@ -17,6 +18,8 @@ app.use('/customers', customerRoutes);
 app.use('/users', userRoutes);
 app.use('/categories',categoryRoutes);
 app.use('/products',productRoutes);
+app.use('/product-images',productImageRoutes);
+
 
 
 
