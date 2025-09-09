@@ -8,9 +8,23 @@ import swaggerDocs  from "./swagger.js";
 import categoryRoutes from './routes/category.js';
 import productRoutes from './routes/product.js';
 import productImageRoutes from './routes/product_images.js';
+import cors from 'cors';
 
 const app = express();
+const allowedOrigins = ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002"];
 app.use(express.json());
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true
+  } 
+));
 dotenv.config();
 
 app.use('/auth', authRoutes);
@@ -19,9 +33,6 @@ app.use('/users', userRoutes);
 app.use('/categories',categoryRoutes);
 app.use('/products',productRoutes);
 app.use('/product-images',productImageRoutes);
-
-
-
 
 const start = async () => {
   const port = process.env.PORT || 3005;
@@ -35,6 +46,7 @@ const start = async () => {
       );
       break;
     } catch (err) {
+      console.log("ERRROR>>",err);
       console.log('Postgres not ready, retrying in 2s...');
       await new Promise(r => setTimeout(r, 2000));
     }

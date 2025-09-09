@@ -19,6 +19,7 @@ router.post('/upload',async (req,res)=>{
             return res.status(400).json({error:`Product with Id ${product_id} does not exist`});
         }   
         console.error(err);
+        
         res.status(500).json({error:'Database error'});
     }
 });
