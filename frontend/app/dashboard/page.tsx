@@ -23,9 +23,6 @@ export default function DashboardPage() {
             router.push("/auth/login");
             return;
         }
-
-        // For now, we'll just show a welcome message
-        // In a real app, you'd fetch user data from the backend
         setIsLoading(false);
     }, [router]);
 
